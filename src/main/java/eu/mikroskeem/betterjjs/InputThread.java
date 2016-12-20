@@ -11,13 +11,16 @@ import java.io.PrintWriter;
 
 public class InputThread extends Thread {
     private ScriptEngine engine;
-    public InputThread(ScriptEngine engine){
+    private ScriptEngine groovyShell;
+    public InputThread(ScriptEngine engine, ScriptEngine groovyShell){
         super("InputThread");
         this.engine = engine;
+        this.groovyShell = groovyShell;
     }
 
     @Override public void run(){
         boolean exit = false;
+        boolean groovyMode = false;
         ConsoleReader reader = null;
         FileHistory hist = null;
         try {
@@ -50,6 +53,14 @@ public class InputThread extends Thread {
                         case "help":
                             Main.printHelp();
                             break;
+                        case "gr":
+                            groovyMode = !groovyMode;
+                            if(groovyMode){
+                                reader.setPrompt("(gr) btjjs> ");
+                            } else {
+                                reader.setPrompt("btjjs> ");
+                            }
+                            break;
                         default:
                             out.println("btjjs: No such command");
                             break;
@@ -57,7 +68,7 @@ public class InputThread extends Thread {
                     if(exit) break;
                 } else if(line.length() != 0){
                     try {
-                        engine.eval(line);
+                        out.println(groovyMode?groovyShell.eval("line"):engine.eval(line));
                     } catch (ScriptException e) {
                         e.printStackTrace();
                     }

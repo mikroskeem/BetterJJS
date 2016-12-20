@@ -13,7 +13,8 @@ public class Main {
     public Main(){
         ScriptEngineManager manager = new ScriptEngineManager();
         ScriptEngine scriptEngine = manager.getEngineByName("nashorn");
-        InputThread inputThread = new InputThread(scriptEngine);
+        ScriptEngine groovyShell = manager.getEngineByName("groovy");
+        InputThread inputThread = new InputThread(scriptEngine, groovyShell);
         inputThread.start();
     }
     public static void main(String... args){
@@ -53,7 +54,8 @@ public class Main {
                 "`:clear` - clear screen",
                 "`:quit` - quit",
                 "`:printenv` - print env",
-                "`:printprops` - print system properties"
+                "`:printprops` - print system properties",
+                "`:gr` - toggle groovy mode"
         };
         for(String s : help) System.out.println(s);
     }
